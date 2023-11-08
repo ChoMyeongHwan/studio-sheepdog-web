@@ -1,10 +1,40 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Announcement List</title>
 </head>
 <body>
-<h1>공지사항 페이지</h1>
+<h1>Announcement List</h1>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Writer</th>
+        <th>Created At</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="announcement : ${announcements.content}">
+        <td th:text="${announcement.id}"></td>
+        <td th:text="${announcement.title}"></td>
+        <td th:text="${announcement.writer}"></td>
+        <td th:text="${announcement.createdDate.format(T(java.time.format.DateTimeFormatter).ofPattern('yyyy-MM-dd HH:mm'))}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<div th:if="${announcements.totalPages > 1}">
+    <ul>
+        <li th:each="pageNumber : ${#numbers.sequence(0, announcements.totalPages - 1)}">
+            <a th:if="${pageNumber != announcements.number}"
+               th:href="@{/announcement(page=${pageNumber})}"
+               th:text="${pageNumber + 1}"></a>
+            <span th:if="${pageNumber == announcements.number}" th:text="${pageNumber + 1}"></span>
+        </li>
+    </ul>
+</div>
+
 </body>
 </html>

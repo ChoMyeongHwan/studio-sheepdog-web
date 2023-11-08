@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="kr">
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
     <title>Create Announcement</title>
 </head>
@@ -8,7 +8,9 @@
 <form action="#" th:action="@{/announcement/create}" method="post">
     <table>
         <tr>
-            <input type="hidden" th:field="*{announcementDTO.id}"/>
+            <td><input type="hidden" th:field="*{announcementDTO.id}"/></td>
+        </tr>
+        <tr>
             <td><label for="title">제목:</label></td>
             <td><input type="text" id="title" th:field="*{announcementDTO.title}" required></td>
         </tr>

@@ -2,9 +2,11 @@ package com.studiosheepdog.dognapper.announcement.application.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
+@ToString
 public class AnnouncementDTO {
     private Long id; //고유 아아디
 

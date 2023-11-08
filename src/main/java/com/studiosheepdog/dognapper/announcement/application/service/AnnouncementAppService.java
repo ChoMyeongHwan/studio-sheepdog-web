@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class AnnouncementAppService {
 
     private final AnnouncementDomService announcementDomService;
+
     @Transactional
     public Announcement createAnnouncement(AnnouncementDTO announcementDTO) {
         return announcementDomService.createAnnouncement(announcementDTO);
@@ -22,5 +23,10 @@ public class AnnouncementAppService {
     @Transactional(readOnly = true)
     public Page<Announcement> getAnnouncements(Pageable pageable) {
         return announcementDomService.getAnnouncements(pageable);
+    }
+
+    @Transactional(readOnly = true)
+    public Announcement getAnnouncement(Long id) {
+        return announcementDomService.getAnnouncement(id);
     }
 }

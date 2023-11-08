@@ -9,6 +9,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.NoSuchElementException;
+
 @Service
 @RequiredArgsConstructor
 public class AnnouncementDomService {
@@ -31,5 +33,12 @@ public class AnnouncementDomService {
     @Transactional(readOnly = true)
     public Page<Announcement> getAnnouncements(Pageable pageable) {
         return announcementRepository.findAll(pageable);
+    }
+
+    // 공지사항 상세 조회
+    @Transactional(readOnly = true)
+    public Announcement getAnnouncement(Long id) {
+        return announcementRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("No Announcement found with id: " + id));
     }
 }

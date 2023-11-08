@@ -27,12 +27,20 @@ public class AnnouncementController {
         return "announcement/list";
     }
 
+    @GetMapping("/{id}") // 상세 조회
+    public String viewAnnouncement(@PathVariable Long id, Model model) {
+        Announcement announcement = announcementAppService.getAnnouncement(id);
+        model.addAttribute("announcement", announcement);
+        return "announcement/detail";
+    }
+
 
     @GetMapping("/createForm") // 공지사항 작성 페이지 이동
     public String createAnnouncementForm(Model model) {
         model.addAttribute("announcementDTO", new AnnouncementDTO());
         return "announcement/create";
     }
+
     @PostMapping("/create") // 공지사항 작성
     public String createAnnouncement(@ModelAttribute AnnouncementDTO announcementDTO, Model model) {
         Announcement announcement = announcementAppService.createAnnouncement(announcementDTO);

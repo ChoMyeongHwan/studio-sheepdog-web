@@ -5,13 +5,12 @@ import com.studiosheepdog.dognapper.announcement.application.service.Announcemen
 import com.studiosheepdog.dognapper.announcement.domain.aggregate.entity.Announcement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/announcement")
@@ -20,12 +19,14 @@ public class AnnouncementController {
 
     private final AnnouncementAppService announcementAppService;
 
-    @GetMapping// 전체 조회
-    public String listAnnouncements(Model model, Pageable pageable) {
+    @GetMapping // 전체 조회
+    public String listAnnouncements(Model model, @RequestParam(defaultValue = "0") int page) {
+        Pageable pageable = PageRequest.of(page, 10, Sort.by("createdDate").descending()); // 내림차순 정렬
         Page<Announcement> announcements = announcementAppService.getAnnouncements(pageable);
         model.addAttribute("announcements", announcements);
         return "announcement/list";
     }
+
 
     @GetMapping("/createForm") // 공지사항 작성 페이지 이동
     public String createAnnouncementForm(Model model) {

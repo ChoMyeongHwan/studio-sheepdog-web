@@ -2,6 +2,7 @@ package com.studiosheepdog.dognapper.announcement.domain.aggregate.entity;
 
 import com.studiosheepdog.dognapper.commons.BaseTimeEntity;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
@@ -17,10 +18,19 @@ public class Announcement extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; //고유 아아디
 
+    @Column(nullable = false)
     private String title; //제목
 
+    @Column(nullable = false)
     private String content; //내용
 
     private String writer; //작성자
+
+    @Builder
+    public Announcement(String title, String content, String writer) {
+        this.title = title;
+        this.content = content;
+        this.writer = writer;
+    }
 
 }

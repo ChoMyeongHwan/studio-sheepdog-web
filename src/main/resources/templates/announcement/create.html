@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="kr">
+<head>
+    <title>Create Announcement</title>
+</head>
+<body>
+<h1>공지사항 작성</h1>
+<form action="#" th:action="@{/announcement/create}" method="post">
+    <table>
+        <tr>
+            <input type="hidden" th:field="*{announcementDTO.id}"/>
+            <td><label for="title">제목:</label></td>
+            <td><input type="text" id="title" th:field="*{announcementDTO.title}" required></td>
+        </tr>
+        <tr>
+            <td><label for="content">내용:</label></td>
+            <td><textarea id="content" th:field="*{announcementDTO.content}" required></textarea></td>
+        </tr>
+        <tr>
+            <td><label for="writer">작성자:</label></td>
+            <td><input type="text" id="writer" th:field="*{announcementDTO.writer}" required></td>
+        </tr>
+        <tr>
+            <td colspan="2"><button type="submit">공지사항 작성</button></td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

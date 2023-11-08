@@ -1,15 +1,13 @@
 package com.studiosheepdog.dognapper.announcement.domain.aggregate.entity;
 
 import com.studiosheepdog.dognapper.commons.BaseTimeEntity;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @ToString
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "ANNOUNCEMENT_TB")
 public class Announcement extends BaseTimeEntity {

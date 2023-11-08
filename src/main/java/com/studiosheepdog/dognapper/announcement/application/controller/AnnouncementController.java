@@ -24,7 +24,7 @@ public class AnnouncementController {
         return "announcement/list";
     }
 
-    @GetMapping("/createView")
+    @GetMapping("/createForm")
     public String createAnnouncementForm(Model model) {
         model.addAttribute("announcementDTO", new AnnouncementDTO());
         return "announcement/create";

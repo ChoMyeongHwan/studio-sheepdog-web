@@ -46,5 +46,19 @@ public class AnnouncementController {
         model.addAttribute("announcement", createdAnnouncement);
         return "redirect:/announcement";
     }
+
+    @GetMapping("/updateForm/{id}") // 공지사항 수정 페이지 이동
+    public String updateAnnouncementForm(@PathVariable Long id, Model model) {
+        AnnouncementDTO announcementDTO = announcementAppService.getAnnouncement(id);
+        model.addAttribute("announcementDTO", announcementDTO);
+        return "announcement/update";
+    }
+
+    @PostMapping("/update/{id}") // 공지사항 수정
+    public String updateAnnouncement(@PathVariable Long id, @ModelAttribute AnnouncementDTO announcementDTO, Model model) {
+        AnnouncementDTO updatedAnnouncement = announcementAppService.updateAnnouncement(id, announcementDTO);
+        model.addAttribute("announcement", updatedAnnouncement);
+        return "redirect:/announcement/" + id;
+    }
 }
 

@@ -41,4 +41,13 @@ public class AnnouncementDomService {
         return announcementRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("No Announcement found with id: " + id));
     }
+
+    // 공지사항 수정
+    @Transactional
+    public Announcement updateAnnouncement(Long id, AnnouncementDTO announcementDTO) {
+        Announcement announcement = announcementRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("No Announcement found with id: " + id));
+        announcement.update(announcementDTO.getTitle(), announcementDTO.getContent(), announcementDTO.getWriter());
+        return announcement;
+    }
 }

@@ -16,17 +16,27 @@ public class AnnouncementAppService {
     private final AnnouncementDomService announcementDomService;
 
     @Transactional
-    public Announcement createAnnouncement(AnnouncementDTO announcementDTO) {
-        return announcementDomService.createAnnouncement(announcementDTO);
+    public AnnouncementDTO createAnnouncement(AnnouncementDTO announcementDTO) {
+        Announcement announcement = announcementDomService.createAnnouncement(announcementDTO);
+        return new AnnouncementDTO(announcement);
     }
 
     @Transactional(readOnly = true)
-    public Page<Announcement> getAnnouncements(Pageable pageable) {
-        return announcementDomService.getAnnouncements(pageable);
+    public Page<AnnouncementDTO> getAnnouncements(Pageable pageable) {
+        Page<Announcement> announcements = announcementDomService.getAnnouncements(pageable);
+        return announcements.map(AnnouncementDTO::new);
     }
 
     @Transactional(readOnly = true)
-    public Announcement getAnnouncement(Long id) {
-        return announcementDomService.getAnnouncement(id);
+    public AnnouncementDTO getAnnouncement(Long id) {
+        Announcement announcement = announcementDomService.getAnnouncement(id);
+        return new AnnouncementDTO(announcement);
+    }
+
+    @Transactional
+    public AnnouncementDTO updateAnnouncement(Long id, AnnouncementDTO announcementDTO) {
+        Announcement announcement = announcementDomService.updateAnnouncement(id, announcementDTO);
+        return new AnnouncementDTO(announcement);
     }
 }
+

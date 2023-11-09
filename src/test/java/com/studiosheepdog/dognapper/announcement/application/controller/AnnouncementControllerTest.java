@@ -49,8 +49,8 @@ class AnnouncementControllerTest {
                 .writer(announcementDTO.getWriter())
                 .build();
 
-        // announcementAppService의 createAnnouncement 메서드가 호출되면 미리 만든 announcement 객체를 반환하도록 설정
-        when(announcementAppService.createAnnouncement(any(AnnouncementDTO.class))).thenReturn(announcement);
+        // announcementAppService의 createAnnouncement 메서드가 호출되면 미리 만든 announcementDTO 객체를 반환하도록 설정
+        when(announcementAppService.createAnnouncement(any(AnnouncementDTO.class))).thenReturn(announcementDTO);
 
         // /announcement/create로 POST 요청을 보내고, 응답 상태와 리다이렉트 URL을 검증
         mockMvc.perform(post("/announcement/create") // MockMvc 인스턴스를 통해 HTTP 요청을 시뮬레이션
@@ -65,15 +65,13 @@ class AnnouncementControllerTest {
     @DisplayName("특정 ID의 공지사항 조회 테스트")
     void getAnnouncementTest() throws Exception {
         Long id = 1L;
-        Announcement announcement = Announcement.builder()
-                .title("Test Title")
-                .content("Test Content")
-                .writer("Test Writer")
-                .build();
+        AnnouncementDTO announcementDTO = new AnnouncementDTO();
+        announcementDTO.setTitle("Test Title");
+        announcementDTO.setContent("Test Content");
+        announcementDTO.setWriter("Test Writer");
 
         // announcementAppService의 getAnnouncement 메서드가 호출되면 미리 만든 announcement 객체를 반환하도록 설정
-        when(announcementAppService.getAnnouncement(id)).thenReturn(announcement);
-        System.out.println("announcement = " + announcement);
+        when(announcementAppService.getAnnouncement(id)).thenReturn(announcementDTO);
 
         // /announcement/{id}로 GET 요청을 보내고, 응답 상태와 응답 본문을 검증
         mockMvc.perform(get("/announcement/" + id))
@@ -87,24 +85,20 @@ class AnnouncementControllerTest {
     @Test
     @DisplayName("모든 공지사항 페이지 단위 조회 테스트")
     void getAnnouncementsTest() throws Exception {
-        Announcement announcement1 = Announcement.builder()
-                .title("Test Title 1")
-                .content("Test Content 1")
-                .writer("Test Writer 1")
-                .build();
-        announcement1.updateCreatedDate(LocalDateTime.now());
-        announcement1.updateModifiedDate(LocalDateTime.now());
+        AnnouncementDTO announcementDTO1 = new AnnouncementDTO();
+        announcementDTO1.setTitle("Test Title 1");
+        announcementDTO1.setContent("Test Content 1");
+        announcementDTO1.setWriter("Test Writer 1");
+        announcementDTO1.setCreatedDate(LocalDateTime.now()); // createdDate 설정
 
-        Announcement announcement2 = Announcement.builder()
-                .title("Test Title 2")
-                .content("Test Content 2")
-                .writer("Test Writer 2")
-                .build();
-        announcement2.updateCreatedDate(LocalDateTime.now());
-        announcement2.updateModifiedDate(LocalDateTime.now());
+        AnnouncementDTO announcementDTO2 = new AnnouncementDTO();
+        announcementDTO2.setTitle("Test Title 2");
+        announcementDTO2.setContent("Test Content 2");
+        announcementDTO2.setWriter("Test Writer 2");
+        announcementDTO2.setCreatedDate(LocalDateTime.now()); // createdDate 설정
 
-        List<Announcement> announcementList = Arrays.asList(announcement1, announcement2);
-        Page<Announcement> announcementPage = new PageImpl<>(announcementList);
+        List<AnnouncementDTO> announcementList = Arrays.asList(announcementDTO1, announcementDTO2);
+        Page<AnnouncementDTO> announcementPage = new PageImpl<>(announcementList);
 
         // announcementAppService의 getAnnouncements 메서드가 호출되면 미리 만든 announcementPage 객체를 반환하도록 설정
         when(announcementAppService.getAnnouncements(any(Pageable.class))).thenReturn(announcementPage);

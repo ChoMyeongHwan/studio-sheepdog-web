@@ -127,4 +127,32 @@ class AnnouncementDomServiceTest {
         // 실제 테스트 대상인 메서드를 호출하면 NoSuchElementException이 발생해야 함
         assertThrows(NoSuchElementException.class, () -> announcementDomService.getAnnouncement(id));
     }
+
+    @Test
+    @DisplayName("AnnouncementDomService의 updateAnnouncement 메서드 테스트")
+    void updateAnnouncementTest() {
+        // 테스트에 사용할 데이터를 생성
+        Long id = 1L;
+        AnnouncementDTO announcementDTO = new AnnouncementDTO();
+        announcementDTO.setTitle("Updated Test Title");
+        announcementDTO.setContent("Updated Test Content");
+        announcementDTO.setWriter("Updated Test Writer");
+
+        Announcement announcement = Announcement.builder()
+                .title("Test Title")
+                .content("Test Content")
+                .writer("Test Writer")
+                .build();
+
+        // announcementRepository.findById()가 호출될 때 위에서 생성한 announcement를 반환하도록 설정
+        when(announcementRepository.findById(id)).thenReturn(Optional.of(announcement));
+
+        // 실제 테스트 대상인 메서드를 호출
+        Announcement updatedAnnouncement = announcementDomService.updateAnnouncement(id, announcementDTO);
+
+        // 반환된 결과가 예상한 결과와 일치하는지 확인
+        assertEquals(announcementDTO.getTitle(), updatedAnnouncement.getTitle());
+        assertEquals(announcementDTO.getContent(), updatedAnnouncement.getContent());
+        assertEquals(announcementDTO.getWriter(), updatedAnnouncement.getWriter());
+    }
 }

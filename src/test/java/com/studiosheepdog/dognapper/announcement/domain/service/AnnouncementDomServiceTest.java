@@ -22,7 +22,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class) // Mockito 확장을 사용하도록 설정
 class AnnouncementDomServiceTest {
@@ -154,5 +154,19 @@ class AnnouncementDomServiceTest {
         assertEquals(announcementDTO.getTitle(), updatedAnnouncement.getTitle());
         assertEquals(announcementDTO.getContent(), updatedAnnouncement.getContent());
         assertEquals(announcementDTO.getWriter(), updatedAnnouncement.getWriter());
+    }
+
+    @Test
+    @DisplayName("AnnouncementDomService의 deleteAnnouncement 메서드 테스트")
+    void testDeleteAnnouncement() {
+        // 삭제할 공지사항의 ID를 설정
+        Long id = 1L;
+
+        // 실제 테스트 대상인 메서드를 호출
+        announcementDomService.deleteAnnouncement(id);
+
+        // announcementRepository.deleteById()가 호출되었는지 확인
+        // verify 메서드는 Mockito 라이브러리의 기능으로, 특정 메서드가 특정 횟수만큼 호출되었는지 검증하는데 사용
+        verify(announcementRepository, times(1)).deleteById(id);
     }
 }

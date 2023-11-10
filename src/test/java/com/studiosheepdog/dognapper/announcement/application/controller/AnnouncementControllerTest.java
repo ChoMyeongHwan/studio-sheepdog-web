@@ -21,9 +21,8 @@ import java.util.List;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest // Spring Boot의 모든 Bean들을 로드하여 통합 테스트 환경을 만듬
@@ -151,5 +150,21 @@ class AnnouncementControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/announcement/" + id));
     }
+
+    @Test
+    @DisplayName("공지사항 삭제 테스트")
+    void testDeleteAnnouncement() throws Exception {
+        Long id = 1L;
+
+        doNothing().when(announcementAppService).deleteAnnouncement(id); // announcementAppService의 deleteAnnouncement 메서드가 호출되면 아무런 동작도 수행하지 않도록 설정
+
+        // /announcement/delete/{id}로 POST 요청을 보내고, 응답 상태와 리다이렉트 URL을 검증
+        mockMvc.perform(post("/announcement/delete/" + id))
+                .andExpect(status().is3xxRedirection()) // 3xx (Redirection) 상태 코드를 반환하는지 확인
+                .andExpect(redirectedUrl("/announcement")); // 리다이렉트 URL을 검증
+
+        verify(announcementAppService, times(1)).deleteAnnouncement(id); // deleteAnnouncement 메서드가 한 번 호출되었는지 확인
+    }
+
 
 }

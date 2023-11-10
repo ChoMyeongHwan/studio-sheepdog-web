@@ -60,5 +60,10 @@ public class AnnouncementController {
         model.addAttribute("announcement", updatedAnnouncement);
         return "redirect:/announcement/" + id;
     }
-}
 
+    @PostMapping("/delete/{id}") // 공지사항 삭제
+    public String deleteAnnouncement(@PathVariable Long id) {
+        announcementAppService.deleteAnnouncement(id);
+        return "redirect:/announcement";
+    }
+}

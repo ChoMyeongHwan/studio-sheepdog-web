@@ -38,5 +38,10 @@ public class AnnouncementAppService {
         Announcement announcement = announcementDomService.updateAnnouncement(id, announcementDTO);
         return new AnnouncementDTO(announcement);
     }
+
+    @Transactional
+    public void deleteAnnouncement(Long id) {
+        announcementDomService.deleteAnnouncement(id);
+    }
 }
 

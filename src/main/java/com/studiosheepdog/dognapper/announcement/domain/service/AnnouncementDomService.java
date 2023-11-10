@@ -50,4 +50,10 @@ public class AnnouncementDomService {
         announcement.update(announcementDTO.getTitle(), announcementDTO.getContent(), announcementDTO.getWriter());
         return announcement;
     }
+
+    // 공지사항 삭제
+    @Transactional
+    public void deleteAnnouncement(Long id) {
+        announcementRepository.deleteById(id);
+    }
 }

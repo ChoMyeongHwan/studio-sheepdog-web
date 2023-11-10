@@ -20,6 +20,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -37,7 +38,7 @@ class AnnouncementControllerTest {
 
     @Test
     @DisplayName("공지사항 생성 테스트")
-    void createAnnouncementTest() throws Exception {
+    void testCreateAnnouncement() throws Exception {
         AnnouncementDTO announcementDTO = new AnnouncementDTO();
         announcementDTO.setTitle("Test Title");
         announcementDTO.setContent("Test Content");
@@ -63,7 +64,7 @@ class AnnouncementControllerTest {
 
     @Test
     @DisplayName("특정 ID의 공지사항 조회 테스트")
-    void getAnnouncementTest() throws Exception {
+    void testGetAnnouncement() throws Exception {
         Long id = 1L;
         AnnouncementDTO announcementDTO = new AnnouncementDTO();
         announcementDTO.setTitle("Test Title");
@@ -84,7 +85,7 @@ class AnnouncementControllerTest {
 
     @Test
     @DisplayName("모든 공지사항 페이지 단위 조회 테스트")
-    void getAnnouncementsTest() throws Exception {
+    void testGetAnnouncements() throws Exception {
         AnnouncementDTO announcementDTO1 = new AnnouncementDTO();
         announcementDTO1.setTitle("Test Title 1");
         announcementDTO1.setContent("Test Content 1");
@@ -109,6 +110,46 @@ class AnnouncementControllerTest {
                 .andExpect(content().contentType("text/html;charset=UTF-8"))
                 .andExpect(content().string(containsString("Test Title 1")))
                 .andExpect(content().string(containsString("Test Title 2")));
+    }
+
+    @Test
+    @DisplayName("공지사항 수정 페이지 이동 테스트")
+    void testUpdateAnnouncementForm() throws Exception {
+        Long id = 1L;
+        AnnouncementDTO announcementDTO = new AnnouncementDTO();
+        announcementDTO.setTitle("Test Title");
+        announcementDTO.setContent("Test Content");
+        announcementDTO.setWriter("Test Writer");
+
+        // announcementAppService의 getAnnouncement 메서드가 호출되면 미리 만든 announcementDTO 객체를 반환하도록 설정
+        when(announcementAppService.getAnnouncement(id)).thenReturn(announcementDTO);
+
+        // /announcement/updateForm/{id}로 GET 요청을 보내고, 응답 상태와 응답 본문을 검증
+        mockMvc.perform(get("/announcement/updateForm/" + id))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("announcementDTO", announcementDTO))
+                .andExpect(view().name("announcement/update"));
+    }
+
+    @Test
+    @DisplayName("공지사항 수정 테스트")
+    void testUpdateAnnouncement() throws Exception {
+        Long id = 1L;
+        AnnouncementDTO announcementDTO = new AnnouncementDTO();
+        announcementDTO.setTitle("Updated Test Title");
+        announcementDTO.setContent("Updated Test Content");
+        announcementDTO.setWriter("Updated Test Writer");
+
+        // announcementAppService의 updateAnnouncement 메서드가 호출되면 미리 만든 announcementDTO 객체를 반환하도록 설정
+        when(announcementAppService.updateAnnouncement(anyLong(), any(AnnouncementDTO.class))).thenReturn(announcementDTO);
+
+        // /announcement/update/{id}로 POST 요청을 보내고, 응답 상태와 리다이렉트 URL을 검증
+        mockMvc.perform(post("/announcement/update/" + id)
+                        .param("title", "Updated Test Title")
+                        .param("content", "Updated Test Content")
+                        .param("writer", "Updated Test Writer"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/announcement/" + id));
     }
 
 }

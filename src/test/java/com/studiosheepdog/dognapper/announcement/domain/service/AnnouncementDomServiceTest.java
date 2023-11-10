@@ -35,7 +35,7 @@ class AnnouncementDomServiceTest {
 
     @Test
     @DisplayName("AnnouncementDomService의 createAnnouncement 메서드 테스트")
-    void createAnnouncementTest() {
+    void testCreateAnnouncement() {
         // 테스트에 사용할 데이터를 생성
         AnnouncementDTO announcementDTO = new AnnouncementDTO();
         announcementDTO.setTitle("Test Title");
@@ -63,7 +63,7 @@ class AnnouncementDomServiceTest {
 
     @Test
     @DisplayName("AnnouncementDomService의 getAnnouncements 메서드 테스트")
-    void getAnnouncementsTest() {
+    void testGetAnnouncements() {
         // 테스트에 사용할 데이터를 생성
         Announcement announcement1 = Announcement.builder()
                 .title("Test Title 1")
@@ -94,7 +94,7 @@ class AnnouncementDomServiceTest {
 
     @Test
     @DisplayName("AnnouncementDomService의 getAnnouncement 메서드 테스트")
-    void getAnnouncementTest() {
+    void testGetAnnouncement() {
         // 테스트에 사용할 데이터를 생성
         Announcement announcement = Announcement.builder()
                 .title("Test Title")
@@ -117,7 +117,7 @@ class AnnouncementDomServiceTest {
 
     @Test
     @DisplayName("AnnouncementDomService의 getAnnouncement 메서드 테스트 - 존재하지 않는 ID")
-    void getAnnouncementNoSuchElementTest() {
+    void testGetAnnouncementNoSuchElement() {
         // 존재하지 않는 ID를 설정
         Long id = 1L;
 
@@ -130,7 +130,7 @@ class AnnouncementDomServiceTest {
 
     @Test
     @DisplayName("AnnouncementDomService의 updateAnnouncement 메서드 테스트")
-    void updateAnnouncementTest() {
+    void testUpdateAnnouncement() {
         // 테스트에 사용할 데이터를 생성
         Long id = 1L;
         AnnouncementDTO announcementDTO = new AnnouncementDTO();

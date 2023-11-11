@@ -19,12 +19,9 @@ public abstract class BaseTimeEntity {
     @LastModifiedDate
     private LocalDateTime modifiedDate;
 
-    // 테스트를 위한 업데이트 메소드 추가
-    public void updateCreatedDate(LocalDateTime createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public void updateModifiedDate(LocalDateTime modifiedDate) {
-        this.modifiedDate = modifiedDate;
+    // 테스트 환경에서만 사용
+    public void setTestTime(LocalDateTime time) {
+        this.createdDate = time;
+        this.modifiedDate = time;
     }
 }

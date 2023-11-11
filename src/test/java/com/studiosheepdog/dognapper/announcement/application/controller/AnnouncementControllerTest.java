@@ -42,12 +42,16 @@ class AnnouncementControllerTest {
         announcementDTO.setTitle("Test Title");
         announcementDTO.setContent("Test Content");
         announcementDTO.setWriter("Test Writer");
+        announcementDTO.setCreatedDate(LocalDateTime.now()); // 작성일 설정
+        announcementDTO.setModifiedDate(LocalDateTime.now()); // 수정일 설정
 
         Announcement announcement = Announcement.builder()
                 .title(announcementDTO.getTitle())
                 .content(announcementDTO.getContent())
                 .writer(announcementDTO.getWriter())
                 .build();
+
+        announcement.setTestTime(LocalDateTime.now()); // 작성일, 수정일 설정
 
         // announcementAppService의 createAnnouncement 메서드가 호출되면 미리 만든 announcementDTO 객체를 반환하도록 설정
         when(announcementAppService.createAnnouncement(any(AnnouncementDTO.class))).thenReturn(announcementDTO);
@@ -69,6 +73,8 @@ class AnnouncementControllerTest {
         announcementDTO.setTitle("Test Title");
         announcementDTO.setContent("Test Content");
         announcementDTO.setWriter("Test Writer");
+        announcementDTO.setCreatedDate(LocalDateTime.now()); // 작성일 설정
+        announcementDTO.setModifiedDate(LocalDateTime.now()); // 수정일 설정
 
         // announcementAppService의 getAnnouncement 메서드가 호출되면 미리 만든 announcement 객체를 반환하도록 설정
         when(announcementAppService.getAnnouncement(id)).thenReturn(announcementDTO);
@@ -89,13 +95,15 @@ class AnnouncementControllerTest {
         announcementDTO1.setTitle("Test Title 1");
         announcementDTO1.setContent("Test Content 1");
         announcementDTO1.setWriter("Test Writer 1");
-        announcementDTO1.setCreatedDate(LocalDateTime.now()); // createdDate 설정
+        announcementDTO1.setCreatedDate(LocalDateTime.now()); // 작성일 설정
+        announcementDTO1.setModifiedDate(LocalDateTime.now()); // 수정일 설정
 
         AnnouncementDTO announcementDTO2 = new AnnouncementDTO();
         announcementDTO2.setTitle("Test Title 2");
         announcementDTO2.setContent("Test Content 2");
         announcementDTO2.setWriter("Test Writer 2");
-        announcementDTO2.setCreatedDate(LocalDateTime.now()); // createdDate 설정
+        announcementDTO2.setCreatedDate(LocalDateTime.now()); // 작성일 설정
+        announcementDTO2.setModifiedDate(LocalDateTime.now()); // 수정일 설정
 
         List<AnnouncementDTO> announcementList = Arrays.asList(announcementDTO1, announcementDTO2);
         Page<AnnouncementDTO> announcementPage = new PageImpl<>(announcementList);
@@ -119,6 +127,8 @@ class AnnouncementControllerTest {
         announcementDTO.setTitle("Test Title");
         announcementDTO.setContent("Test Content");
         announcementDTO.setWriter("Test Writer");
+        announcementDTO.setCreatedDate(LocalDateTime.now()); // 작성일 설정
+        announcementDTO.setModifiedDate(LocalDateTime.now()); // 수정일 설정
 
         // announcementAppService의 getAnnouncement 메서드가 호출되면 미리 만든 announcementDTO 객체를 반환하도록 설정
         when(announcementAppService.getAnnouncement(id)).thenReturn(announcementDTO);
@@ -138,6 +148,8 @@ class AnnouncementControllerTest {
         announcementDTO.setTitle("Updated Test Title");
         announcementDTO.setContent("Updated Test Content");
         announcementDTO.setWriter("Updated Test Writer");
+        announcementDTO.setCreatedDate(LocalDateTime.now()); // 작성일 설정
+        announcementDTO.setModifiedDate(LocalDateTime.now()); // 수정일 설정
 
         // announcementAppService의 updateAnnouncement 메서드가 호출되면 미리 만든 announcementDTO 객체를 반환하도록 설정
         when(announcementAppService.updateAnnouncement(anyLong(), any(AnnouncementDTO.class))).thenReturn(announcementDTO);

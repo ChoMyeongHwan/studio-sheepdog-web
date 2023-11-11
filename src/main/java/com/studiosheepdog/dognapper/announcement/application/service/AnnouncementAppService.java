@@ -18,7 +18,10 @@ public class AnnouncementAppService {
     @Transactional
     public AnnouncementDTO createAnnouncement(AnnouncementDTO announcementDTO) {
         Announcement announcement = announcementDomService.createAnnouncement(announcementDTO);
-        return new AnnouncementDTO(announcement);
+        AnnouncementDTO createdAnnouncement = new AnnouncementDTO(announcement);
+        createdAnnouncement.setCreatedDate(announcement.getCreatedDate()); // 작성일 설정
+        createdAnnouncement.setModifiedDate(announcement.getModifiedDate()); // 수정일 설정
+        return createdAnnouncement;
     }
 
     @Transactional(readOnly = true)

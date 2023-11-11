@@ -31,5 +31,7 @@ public class AnnouncementDTO {
         this.title = announcement.getTitle();
         this.content = announcement.getContent();
         this.writer = announcement.getWriter();
+        this.createdDate = announcement.getCreatedDate(); // 작성일 설정
+        this.modifiedDate = announcement.getModifiedDate(); // 수정일 설정
     }
 }

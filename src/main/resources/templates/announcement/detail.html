@@ -1,18 +1,23 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
     <title>Announcement Detail</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
 </head>
 <body>
-<h1>Announcement Detail</h1>
-
-<div>
-    <h2 th:text="${announcement.title}"></h2>
-    <p><strong>Writer:</strong> <span th:text="${announcement.writer}"></span></p>
-    <p><strong>Content:</strong></p>
-    <p th:text="${announcement.content}"></p>
+<div class="container">
+    <h1>Announcement Detail</h1>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title" th:text="${announcement.title}"></h5>
+            <p class="card-text" th:text="${announcement.content}"></p>
+            <p class="card-footer" th:text="${announcement.writer}"></p>
+        </div>
+    </div>
+    <a th:href="@{/announcement/updateForm/{id}(id=${announcement.id})}" class="btn btn-warning">Update</a>
+    <form th:action="@{/announcement/delete/{id}(id=${announcement.id})}" method="post">
+        <input type="submit" value="Delete" class="btn btn-danger">
+    </form>
 </div>
-
-<a th:href="@{/announcement}">Back to the list</a>
 </body>
 </html>

@@ -27,7 +27,6 @@
         <tr th:each="announcement : ${announcements}">
             <td><a th:href="@{/announcement/{id}(id=${announcement.id})}" th:text="${announcement.title}"></a></td>
             <td class="writer" th:text="${announcement.writer}"></td>
-<!--            <td class="date" th:text="${#dates.format(announcement.createdDate, 'yyyy-MM-dd HH:mm')}"></td>-->
             <td th:text="${#temporals.format(announcement.createdDate, 'yyyy-MM-dd HH:mm')}"></td>
             <td><a th:href="@{/announcement/{id}(id=${announcement.id})}" class="btn btn-primary btn-sm">View</a></td>
         </tr>
@@ -37,6 +36,7 @@
         <a href="/announcement/createForm" class="btn btn-success">Create New Announcement</a>
     </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

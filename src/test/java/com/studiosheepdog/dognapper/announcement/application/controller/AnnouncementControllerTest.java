@@ -2,7 +2,7 @@ package com.studiosheepdog.dognapper.announcement.application.controller;
 
 import com.studiosheepdog.dognapper.announcement.application.dto.AnnouncementDTO;
 import com.studiosheepdog.dognapper.announcement.application.service.AnnouncementAppService;
-import com.studiosheepdog.dognapper.announcement.domain.aggregate.entity.Announcement;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -35,132 +35,113 @@ class AnnouncementControllerTest {
     @MockBean
     private AnnouncementAppService announcementAppService; // 테스트에서 사용할 AnnouncementAppService를 모킹
 
+    private static final String TEST_TITLE = "Test Title";
+    private static final String TEST_CONTENT = "Test Content";
+    private static final String TEST_WRITER = "Test Writer";
+
+    private AnnouncementDTO announcementDTO;
+
+    @BeforeEach
+    void setUp() {
+        announcementDTO = createAnnouncementDTO(TEST_TITLE, TEST_CONTENT, TEST_WRITER);
+    }
+
+    private AnnouncementDTO createAnnouncementDTO(String title, String content, String writer) {
+        AnnouncementDTO announcementDTO = new AnnouncementDTO();
+        announcementDTO.setTitle(title);
+        announcementDTO.setContent(content);
+        announcementDTO.setWriter(writer);
+        announcementDTO.setCreatedDate(LocalDateTime.now());
+        announcementDTO.setModifiedDate(LocalDateTime.now());
+
+        return announcementDTO;
+    }
+
     @Test
     @DisplayName("공지사항 생성 테스트")
     void testCreateAnnouncement() throws Exception {
-        AnnouncementDTO announcementDTO = new AnnouncementDTO();
-        announcementDTO.setTitle("Test Title");
-        announcementDTO.setContent("Test Content");
-        announcementDTO.setWriter("Test Writer");
-        announcementDTO.setCreatedDate(LocalDateTime.now()); // 작성일 설정
-        announcementDTO.setModifiedDate(LocalDateTime.now()); // 수정일 설정
-
-        Announcement announcement = Announcement.builder()
-                .title(announcementDTO.getTitle())
-                .content(announcementDTO.getContent())
-                .writer(announcementDTO.getWriter())
-                .build();
-
-        announcement.setTestTime(LocalDateTime.now()); // 작성일, 수정일 설정
-
         // announcementAppService의 createAnnouncement 메서드가 호출되면 미리 만든 announcementDTO 객체를 반환하도록 설정
         when(announcementAppService.createAnnouncement(any(AnnouncementDTO.class))).thenReturn(announcementDTO);
 
         // /announcement/create로 POST 요청을 보내고, 응답 상태와 리다이렉트 URL을 검증
         mockMvc.perform(post("/announcement/create") // MockMvc 인스턴스를 통해 HTTP 요청을 시뮬레이션
-                        .param("title", "Test Title") // 요청 파라미터를 설정
-                        .param("content", "Test Content")
-                        .param("writer", "Test Writer"))
+                        .param("title", TEST_TITLE) // 요청 파라미터를 설정
+                        .param("content", TEST_CONTENT)
+                        .param("writer", TEST_WRITER))
                 .andExpect(status().is3xxRedirection()) // 3xx (Redirection) 상태 코드를 반환하는지 확인
                 .andExpect(redirectedUrl("/announcement")); // 리다이렉트 URL을 검증
+
+        verify(announcementAppService, times(1)).createAnnouncement(any(AnnouncementDTO.class));
     }
 
     @Test
     @DisplayName("특정 ID의 공지사항 조회 테스트")
     void testGetAnnouncement() throws Exception {
         Long id = 1L;
-        AnnouncementDTO announcementDTO = new AnnouncementDTO();
-        announcementDTO.setTitle("Test Title");
-        announcementDTO.setContent("Test Content");
-        announcementDTO.setWriter("Test Writer");
-        announcementDTO.setCreatedDate(LocalDateTime.now()); // 작성일 설정
-        announcementDTO.setModifiedDate(LocalDateTime.now()); // 수정일 설정
 
-        // announcementAppService의 getAnnouncement 메서드가 호출되면 미리 만든 announcement 객체를 반환하도록 설정
         when(announcementAppService.getAnnouncement(id)).thenReturn(announcementDTO);
 
-        // /announcement/{id}로 GET 요청을 보내고, 응답 상태와 응답 본문을 검증
         mockMvc.perform(get("/announcement/" + id))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("text/html;charset=UTF-8"))
-                .andExpect(content().string(containsString("Test Title")))
-                .andExpect(content().string(containsString("Test Content")))
-                .andExpect(content().string(containsString("Test Writer")));
+                .andExpect(content().string(containsString(TEST_TITLE)))
+                .andExpect(content().string(containsString(TEST_CONTENT)))
+                .andExpect(content().string(containsString(TEST_WRITER)));
+
+        verify(announcementAppService, times(1)).getAnnouncement(id);
     }
 
     @Test
     @DisplayName("모든 공지사항 페이지 단위 조회 테스트")
     void testGetAnnouncements() throws Exception {
-        AnnouncementDTO announcementDTO1 = new AnnouncementDTO();
-        announcementDTO1.setTitle("Test Title 1");
-        announcementDTO1.setContent("Test Content 1");
-        announcementDTO1.setWriter("Test Writer 1");
-        announcementDTO1.setCreatedDate(LocalDateTime.now()); // 작성일 설정
-        announcementDTO1.setModifiedDate(LocalDateTime.now()); // 수정일 설정
+        AnnouncementDTO announcementDTO1 = createAnnouncementDTO("Test Title 1", "Test Content 1", "Test Writer 1");
 
-        AnnouncementDTO announcementDTO2 = new AnnouncementDTO();
-        announcementDTO2.setTitle("Test Title 2");
-        announcementDTO2.setContent("Test Content 2");
-        announcementDTO2.setWriter("Test Writer 2");
-        announcementDTO2.setCreatedDate(LocalDateTime.now()); // 작성일 설정
-        announcementDTO2.setModifiedDate(LocalDateTime.now()); // 수정일 설정
-
-        List<AnnouncementDTO> announcementList = Arrays.asList(announcementDTO1, announcementDTO2);
+        List<AnnouncementDTO> announcementList = Arrays.asList(announcementDTO, announcementDTO1);
         Page<AnnouncementDTO> announcementPage = new PageImpl<>(announcementList);
 
-        // announcementAppService의 getAnnouncements 메서드가 호출되면 미리 만든 announcementPage 객체를 반환하도록 설정
         when(announcementAppService.getAnnouncements(any(Pageable.class))).thenReturn(announcementPage);
 
-        // /announcement로 GET 요청을 보내고, 응답 상태와 응답 본문을 검증
         mockMvc.perform(get("/announcement"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("text/html;charset=UTF-8"))
-                .andExpect(content().string(containsString("Test Title 1")))
-                .andExpect(content().string(containsString("Test Title 2")));
+                .andExpect(content().string(containsString(TEST_TITLE)))
+                .andExpect(content().string(containsString("Test Title 1")));
+
+        verify(announcementAppService, times(1)).getAnnouncements(any(Pageable.class));
     }
 
     @Test
     @DisplayName("공지사항 수정 페이지 이동 테스트")
     void testUpdateAnnouncementForm() throws Exception {
         Long id = 1L;
-        AnnouncementDTO announcementDTO = new AnnouncementDTO();
-        announcementDTO.setTitle("Test Title");
-        announcementDTO.setContent("Test Content");
-        announcementDTO.setWriter("Test Writer");
-        announcementDTO.setCreatedDate(LocalDateTime.now()); // 작성일 설정
-        announcementDTO.setModifiedDate(LocalDateTime.now()); // 수정일 설정
+        announcementDTO = createAnnouncementDTO(TEST_TITLE, TEST_CONTENT, TEST_WRITER); // 테스트 독립성을 위해 새로운 객체 생성
 
-        // announcementAppService의 getAnnouncement 메서드가 호출되면 미리 만든 announcementDTO 객체를 반환하도록 설정
         when(announcementAppService.getAnnouncement(id)).thenReturn(announcementDTO);
 
-        // /announcement/updateForm/{id}로 GET 요청을 보내고, 응답 상태와 응답 본문을 검증
         mockMvc.perform(get("/announcement/updateForm/" + id))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("announcementDTO", announcementDTO))
                 .andExpect(view().name("announcement/update"));
+
+        verify(announcementAppService, times(1)).getAnnouncement(id);
     }
 
     @Test
     @DisplayName("공지사항 수정 테스트")
     void testUpdateAnnouncement() throws Exception {
         Long id = 1L;
-        AnnouncementDTO announcementDTO = new AnnouncementDTO();
-        announcementDTO.setTitle("Updated Test Title");
-        announcementDTO.setContent("Updated Test Content");
-        announcementDTO.setWriter("Updated Test Writer");
-        announcementDTO.setCreatedDate(LocalDateTime.now()); // 작성일 설정
-        announcementDTO.setModifiedDate(LocalDateTime.now()); // 수정일 설정
+        announcementDTO = createAnnouncementDTO(TEST_TITLE, TEST_CONTENT, TEST_WRITER); // 테스트 독립성을 위해 새로운 객체 생성
 
-        // announcementAppService의 updateAnnouncement 메서드가 호출되면 미리 만든 announcementDTO 객체를 반환하도록 설정
         when(announcementAppService.updateAnnouncement(anyLong(), any(AnnouncementDTO.class))).thenReturn(announcementDTO);
 
-        // /announcement/update/{id}로 POST 요청을 보내고, 응답 상태와 리다이렉트 URL을 검증
         mockMvc.perform(post("/announcement/update/" + id)
                         .param("title", "Updated Test Title")
                         .param("content", "Updated Test Content")
                         .param("writer", "Updated Test Writer"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/announcement/" + id));
+
+        verify(announcementAppService, times(1)).updateAnnouncement(anyLong(), any(AnnouncementDTO.class));
     }
 
     @Test
@@ -168,15 +149,14 @@ class AnnouncementControllerTest {
     void testDeleteAnnouncement() throws Exception {
         Long id = 1L;
 
-        doNothing().when(announcementAppService).deleteAnnouncement(id); // announcementAppService의 deleteAnnouncement 메서드가 호출되면 아무런 동작도 수행하지 않도록 설정
+        // announcementAppService의 deleteAnnouncement 메서드가 호출되면 아무런 동작도 수행하지 않도록 설정
+        doNothing().when(announcementAppService).deleteAnnouncement(id);
 
-        // /announcement/delete/{id}로 POST 요청을 보내고, 응답 상태와 리다이렉트 URL을 검증
         mockMvc.perform(post("/announcement/delete/" + id))
-                .andExpect(status().is3xxRedirection()) // 3xx (Redirection) 상태 코드를 반환하는지 확인
-                .andExpect(redirectedUrl("/announcement")); // 리다이렉트 URL을 검증
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/announcement"));
 
-        verify(announcementAppService, times(1)).deleteAnnouncement(id); // deleteAnnouncement 메서드가 한 번 호출되었는지 확인
+        verify(announcementAppService, times(1)).deleteAnnouncement(id);
     }
-
 
 }

@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 public class AnnouncementController {
 
     private final AnnouncementAppService announcementAppService;
+    private static final String ANNOUNCEMENT_REDIRECTION = "redirect:/announcement";
+    private static final String ANNOUNCEMENT = "announcement";
 
     @GetMapping // 전체 조회
     public String listAnnouncements(Model model, @RequestParam(defaultValue = "0") int page) {
@@ -29,7 +31,7 @@ public class AnnouncementController {
     @GetMapping("/{id}") // 상세 조회
     public String viewAnnouncement(@PathVariable Long id, Model model) {
         AnnouncementDTO announcementDTO = announcementAppService.getAnnouncement(id);
-        model.addAttribute("announcement", announcementDTO);
+        model.addAttribute(ANNOUNCEMENT, announcementDTO);
         return "announcement/detail";
     }
 
@@ -43,8 +45,8 @@ public class AnnouncementController {
     @PostMapping("/create") // 공지사항 작성
     public String createAnnouncement(@ModelAttribute AnnouncementDTO announcementDTO, Model model) {
         AnnouncementDTO createdAnnouncement = announcementAppService.createAnnouncement(announcementDTO);
-        model.addAttribute("announcement", createdAnnouncement);
-        return "redirect:/announcement";
+        model.addAttribute(ANNOUNCEMENT, createdAnnouncement);
+        return ANNOUNCEMENT_REDIRECTION;
     }
 
     @GetMapping("/updateForm/{id}") // 공지사항 수정 페이지 이동
@@ -57,13 +59,13 @@ public class AnnouncementController {
     @PostMapping("/update/{id}") // 공지사항 수정
     public String updateAnnouncement(@PathVariable Long id, @ModelAttribute AnnouncementDTO announcementDTO, Model model) {
         AnnouncementDTO updatedAnnouncement = announcementAppService.updateAnnouncement(id, announcementDTO);
-        model.addAttribute("announcement", updatedAnnouncement);
+        model.addAttribute(ANNOUNCEMENT, updatedAnnouncement);
         return "redirect:/announcement/" + id;
     }
 
     @PostMapping("/delete/{id}") // 공지사항 삭제
     public String deleteAnnouncement(@PathVariable Long id) {
         announcementAppService.deleteAnnouncement(id);
-        return "redirect:/announcement";
+        return ANNOUNCEMENT_REDIRECTION;
     }
 }

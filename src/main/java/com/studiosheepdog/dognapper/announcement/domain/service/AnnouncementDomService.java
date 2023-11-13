@@ -12,13 +12,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.NoSuchElementException;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class AnnouncementDomService {
 
     private final AnnouncementRepository announcementRepository;
 
     // 공지사항 작성
-    @Transactional
     public Announcement createAnnouncement(AnnouncementDTO announcementDTO) {
         Announcement announcement = Announcement.builder()
                 .title(announcementDTO.getTitle())
@@ -43,7 +43,6 @@ public class AnnouncementDomService {
     }
 
     // 공지사항 수정
-    @Transactional
     public Announcement updateAnnouncement(Long id, AnnouncementDTO announcementDTO) {
         Announcement announcement = announcementRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("No Announcement found with id: " + id));
@@ -52,7 +51,6 @@ public class AnnouncementDomService {
     }
 
     // 공지사항 삭제
-    @Transactional
     public void deleteAnnouncement(Long id) {
         announcementRepository.deleteById(id);
     }

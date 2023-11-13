@@ -18,28 +18,26 @@ public class AnnouncementAppService {
     @Transactional
     public AnnouncementDTO createAnnouncement(AnnouncementDTO announcementDTO) {
         Announcement announcement = announcementDomService.createAnnouncement(announcementDTO);
-        AnnouncementDTO createdAnnouncement = new AnnouncementDTO(announcement);
-        createdAnnouncement.setCreatedDate(announcement.getCreatedDate()); // 작성일 설정
-        createdAnnouncement.setModifiedDate(announcement.getModifiedDate()); // 수정일 설정
-        return createdAnnouncement;
+
+        return announcement.toDTO();
     }
 
     @Transactional(readOnly = true)
     public Page<AnnouncementDTO> getAnnouncements(Pageable pageable) {
         Page<Announcement> announcements = announcementDomService.getAnnouncements(pageable);
-        return announcements.map(AnnouncementDTO::new);
+        return announcements.map(Announcement::toDTO);
     }
 
     @Transactional(readOnly = true)
     public AnnouncementDTO getAnnouncement(Long id) {
         Announcement announcement = announcementDomService.getAnnouncement(id);
-        return new AnnouncementDTO(announcement);
+        return announcement.toDTO();
     }
 
     @Transactional
     public AnnouncementDTO updateAnnouncement(Long id, AnnouncementDTO announcementDTO) {
         Announcement announcement = announcementDomService.updateAnnouncement(id, announcementDTO);
-        return new AnnouncementDTO(announcement);
+        return announcement.toDTO();
     }
 
     @Transactional

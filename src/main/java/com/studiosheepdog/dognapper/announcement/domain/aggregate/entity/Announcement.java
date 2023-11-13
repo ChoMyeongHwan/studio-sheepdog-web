@@ -1,5 +1,6 @@
 package com.studiosheepdog.dognapper.announcement.domain.aggregate.entity;
 
+import com.studiosheepdog.dognapper.announcement.application.dto.AnnouncementDTO;
 import com.studiosheepdog.dognapper.commons.BaseTimeEntity;
 import lombok.*;
 
@@ -37,4 +38,15 @@ public class Announcement extends BaseTimeEntity {
         this.writer = writer;
     }
 
+    // Entity -> DTO 변환 : 캡슐화 적용
+    public AnnouncementDTO toDTO() {
+        AnnouncementDTO dto = new AnnouncementDTO();
+        dto.setId(this.id);
+        dto.setTitle(this.title);
+        dto.setContent(this.content);
+        dto.setWriter(this.writer);
+        dto.setCreatedDate(this.getCreatedDate());
+        dto.setModifiedDate(this.getModifiedDate());
+        return dto;
+    }
 }

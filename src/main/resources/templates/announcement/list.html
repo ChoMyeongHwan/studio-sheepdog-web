@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
-    <title>공지사항</title>
+    <title>Studio Sheepdog</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
 </head>
 <body>
+<div th:insert="navbar::navbar"></div>
 <div class="container my-3">
     <div class="d-flex justify-content-between align-items-center">
         <h2>공지사항</h2>
@@ -22,8 +23,8 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="announcement, stat : ${announcements}">
-            <td th:text="${announcements.totalElements - stat.index}"></td>
+        <tr th:each="announcement : ${announcements}">
+            <td th:text="${announcement.id}"></td>
             <td><a th:href="@{'/announcement/' + ${announcement.id}}" th:text="${announcement.title}"></a></td>
             <td th:text="${announcement.writer}"></td>
             <td th:text="${#temporals.format(announcement.createdDate, 'yyyy-MM-dd')}"></td>
@@ -36,5 +37,7 @@
         <li th:if="${announcements.number + 1 < announcements.totalPages}" class="page-item"><a class="page-link" th:href="@{'?page=' + ${announcements.number + 1}}">Next</a></li>
     </ul>
 </div>
+<!-- Bootstrap core JS-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
 </body>
 </html>

@@ -1,0 +1,29 @@
+package com.studiosheepdog.dognapper.board.domain.aggregate.entity;
+
+import com.studiosheepdog.dognapper.commons.BaseTimeEntity;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+import javax.persistence.*;
+
+@Entity
+@ToString
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "BORAD_TB")
+public class Borad extends BaseTimeEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id; //고유 아아디
+
+    @Column(nullable = false)
+    private String title; //제목
+
+    @Column(nullable = false)
+    private String content; //내용
+
+    private String writer; //작성자
+}

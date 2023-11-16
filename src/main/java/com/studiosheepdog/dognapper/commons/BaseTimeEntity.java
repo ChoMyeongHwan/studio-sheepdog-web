@@ -5,6 +5,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import javax.persistence.Column;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
@@ -13,15 +14,12 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class) //해당 엔티티에 대해 AuditingEntityListener를 사용하도록 설정
 @Getter
 public abstract class BaseTimeEntity {
+
     @CreatedDate
+    @Column(updatable = false)
     private LocalDateTime createdDate;
 
     @LastModifiedDate
     private LocalDateTime modifiedDate;
 
-    // 테스트 환경에서만 사용
-    public void setTestTime(LocalDateTime time) {
-        this.createdDate = time;
-        this.modifiedDate = time;
-    }
 }

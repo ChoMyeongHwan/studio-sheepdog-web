@@ -4,26 +4,27 @@ import com.studiosheepdog.dognapper.commons.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import javax.persistence.*;
 
 @Entity
-@ToString
-@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "BORAD_TB")
-public class Borad extends BaseTimeEntity {
+@Getter
+@Table(name = "COMMENT_TB")
+public class Comment extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; //고유 아아디
+    private Long id;
 
-    @Column(nullable = false)
-    private String title; //제목
+    private String body;
 
-    @Column(nullable = false)
-    private String content; //내용
+    private String writer; // 댓글 작성자 닉네임
 
-    private String writer; //작성자
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Board board; // 댓글이 달린 게시판
+
+    public void update(String newBody) {
+        this.body = newBody;
+    }
 }

@@ -24,6 +24,13 @@ public class BoardController {
         return "board/list";
     }
 
+    @GetMapping("/{id}/detail") // 게시글 상세 조회
+    public String viewBoard(@PathVariable Long id, Model model) {
+        Board board = boardService.getBoard(id);
+        model.addAttribute("board", board);
+        return "board/detail";
+    }
+
     @GetMapping("/write") // 게시글 작성 페이지 이동
     public String writeBoardForm() {
         return "board/write";
@@ -45,7 +52,7 @@ public class BoardController {
     @PostMapping("/{id}/edit") // 게시글 수정
     public String editBoard(@PathVariable Long id, WriteBoardDTO writeBoardDTO) {
         boardService.updateBoard(id, writeBoardDTO);
-        return "redirect:/board";
+        return "redirect:/board/" + id + "/detail";
     }
 
     @PostMapping("/{id}/delete") // 게시글 삭제

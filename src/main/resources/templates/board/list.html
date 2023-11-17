@@ -24,7 +24,7 @@
         <tbody>
         <tr th:each="board : ${boards}">
             <td th:text="${board.id}"></td>
-            <td><a th:href="@{'/board/' + ${board.id} + '/edit'}" th:text="${board.title}"></a></td>
+            <td><a th:href="@{'/board/' + ${board.id} + '/detail'}" th:text="${board.title}"></a></td>
             <td th:text="${#temporals.format(board.createdDate, 'yyyy-MM-dd')}"></td>
         </tr>
         </tbody>

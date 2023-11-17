@@ -16,7 +16,9 @@
     <p th:text="${board.content}"></p>
   </div>
   <a th:href="@{'/board/' + ${board.id} + '/edit'}" class="btn btn-primary">수정</a>
-  <a th:href="@{'/board/' + ${board.id} + '/delete'}" class="btn btn-danger">삭제</a>
+  <form th:action="@{'/board/' + ${board.id} + '/delete'}" method="post" style="display: inline;">
+    <button type="submit" class="btn btn-danger">삭제</button>
+  </form>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
 </body>

@@ -24,6 +24,12 @@ public class Comment extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Board board; // 댓글이 달린 게시판
 
+    public Comment(String body, String writer, Board board) {
+        this.body = body;
+        this.writer = writer;
+        this.board = board;
+    }
+
     public void update(String newBody) {
         this.body = newBody;
     }

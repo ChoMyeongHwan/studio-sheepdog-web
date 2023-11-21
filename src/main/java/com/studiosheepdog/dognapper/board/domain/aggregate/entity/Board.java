@@ -1,5 +1,6 @@
 package com.studiosheepdog.dognapper.board.domain.aggregate.entity;
 
+import com.studiosheepdog.dognapper.board.application.dto.WriteBoardDTO;
 import com.studiosheepdog.dognapper.board.domain.aggregate.enums.BoardCategory;
 import com.studiosheepdog.dognapper.commons.BaseTimeEntity;
 import lombok.*;
@@ -35,6 +36,12 @@ public class Board extends BaseTimeEntity {
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Like> likes = new ArrayList<>(); // 좋아요
 
+
+    public void update(WriteBoardDTO writeBoardDTO) {
+        this.title = writeBoardDTO.getTitle();
+        this.content = writeBoardDTO.getContent();
+        this.category = writeBoardDTO.getCategory();
+    }
 
     public int getCommentCount() {
         return comments.size();

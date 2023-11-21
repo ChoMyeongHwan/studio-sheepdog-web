@@ -1,5 +1,6 @@
 package com.studiosheepdog.dognapper.board.domain.aggregate.entity;
 
+import com.studiosheepdog.dognapper.board.application.dto.WriteCommentDTO;
 import com.studiosheepdog.dognapper.commons.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -28,5 +29,9 @@ public class Comment extends BaseTimeEntity {
         this.content = content;
         this.writer = writer;
         this.board = board;
+    }
+
+    public void update(WriteCommentDTO writeCommentDTO) {
+        this.content = writeCommentDTO.getContent();
     }
 }

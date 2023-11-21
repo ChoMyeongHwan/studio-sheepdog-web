@@ -17,20 +17,16 @@ public class Comment extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String body;
-
+    private String content; // 댓글 내용
     private String writer; // 댓글 작성자 닉네임
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Board board; // 댓글이 달린 게시판
+    @JoinColumn(name = "board_id")
+    private Board board; // 댓글이 달린 게시글
 
-    public Comment(String body, String writer, Board board) {
-        this.body = body;
+    public Comment(String content, String writer, Board board) {
+        this.content = content;
         this.writer = writer;
         this.board = board;
-    }
-
-    public void update(String newBody) {
-        this.body = newBody;
     }
 }

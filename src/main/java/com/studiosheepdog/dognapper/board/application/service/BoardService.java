@@ -1,5 +1,6 @@
 package com.studiosheepdog.dognapper.board.application.service;
 
+import com.studiosheepdog.dognapper.board.application.dto.BoardDTO;
 import com.studiosheepdog.dognapper.board.application.dto.WriteBoardDTO;
 import com.studiosheepdog.dognapper.board.domain.aggregate.entity.Board;
 import com.studiosheepdog.dognapper.board.domain.repository.BoardRepository;
@@ -8,8 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,35 +21,52 @@ public class BoardService {
     private final BoardValidator boardValidator;
 
     /* 전체 조회 */
-    public Page<Board> getAllBoards(Pageable pageable) {
-        return boardRepository.findAll(pageable);
+    @Transactional(readOnly = true)
+    public Page<BoardDTO> getAllBoards(Pageable pageable) {
+        return boardRepository.findAll(pageable)
+                .map(BoardDTO::from);
     }
 
     /* 게시글 조회 */
-    public Board getBoard(Long id) {
-        return boardRepository.findById(id)
+    @Transactional(readOnly = true)
+    public BoardDTO getBoard(Long id) {
+        Board board = boardRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + id));
+        return BoardDTO.from(board);
     }
 
     /* 게시글 작성 */
+    @Transactional
     public void writeBoard(WriteBoardDTO writeBoardDTO) {
         boardValidator.validateWriteBoardDTO(writeBoardDTO);
-        Board newBoard = Board.from(writeBoardDTO);
+        Board newBoard = Board.builder()
+                .title(writeBoardDTO.getTitle())
+                .content(writeBoardDTO.getContent())
+                .category(writeBoardDTO.getCategory())
+                .writer(writeBoardDTO.getWriter())
+                .build();
         boardRepository.save(newBoard);
     }
 
     /* 게시글 수정 */
+    @Transactional
     public void updateBoard(Long id, WriteBoardDTO writeBoardDTO) {
         boardValidator.validateWriteBoardDTO(writeBoardDTO);
-        Board board = getBoard(id);
-        board.update(writeBoardDTO);
-        boardRepository.save(board);
+        Optional<Board> board = boardRepository.findById(id);
+        if (!board.isPresent()) {
+            throw new IllegalArgumentException("해당 게시글이 없습니다. id=" + id);
+        }
+        board.get().update(writeBoardDTO);
+        boardRepository.save(board.get());
     }
 
     /* 게시글 삭제 */
+    @Transactional
     public void deleteBoard(Long id) {
-        Board board = getBoard(id);
-        boardRepository.delete(board);
+        Optional<Board> board = boardRepository.findById(id);
+        if (!board.isPresent()) {
+            throw new IllegalArgumentException("해당 게시글이 없습니다. id=" + id);
+        }
+        boardRepository.delete(board.get());
     }
-
 }

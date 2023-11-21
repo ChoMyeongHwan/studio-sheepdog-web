@@ -1,5 +1,7 @@
 package com.studiosheepdog.dognapper.board.application.service;
 
+import com.studiosheepdog.dognapper.board.application.dto.CommentDTO;
+import com.studiosheepdog.dognapper.board.application.dto.WriteCommentDTO;
 import com.studiosheepdog.dognapper.board.domain.aggregate.entity.Board;
 import com.studiosheepdog.dognapper.board.domain.aggregate.entity.Comment;
 import com.studiosheepdog.dognapper.board.domain.repository.BoardRepository;
@@ -9,48 +11,48 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class CommentService {
 
-    private final CommentRepository commentRepository;
     private final BoardRepository boardRepository;
+    private final CommentRepository commentRepository;
 
-    // 댓글 생성
-    @Transactional
-    public Comment createComment(Long boardId, Comment comment) {
-        Optional<Board> board = boardRepository.findById(boardId);
-        if (board.isPresent()) {
-            Comment newComment = new Comment(comment.getBody(), comment.getWriter(), board.get());
-            return commentRepository.save(newComment);
-        } else {
-            throw new IllegalArgumentException("게시글을 찾을 수 없습니다: " + boardId);
-        }
+    /* 댓글 조회 */
+    @Transactional(readOnly = true)
+    public List<CommentDTO> getComments(Long boardId) {
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + boardId));
+        return board.getComments().stream()
+                .map(CommentDTO::from)
+                .collect(Collectors.toList());
     }
 
-    // 댓글 조회
-    public List<Comment> getComments(Long boardId) {
-        Optional<Board> board = boardRepository.findById(boardId);
-        return board.map(Board::getComments)
-                .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다: " + boardId));
+    /* 댓글 작성 */
+    @Transactional
+    public void writeComment(Long boardId, WriteCommentDTO writeCommentDTO) {
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + boardId));
+        Comment newComment = new Comment(writeCommentDTO.getContent(), writeCommentDTO.getWriter(), board);
+        commentRepository.save(newComment);
     }
 
-    // 댓글 수정
+    /* 댓글 수정 */
     @Transactional
-    public Comment updateComment(Long id, Comment updatedComment) {
-        Comment comment = commentRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다: " + id));
-        comment.update(updatedComment.getBody());
-        return comment;
+    public void updateComment(Long commentId, WriteCommentDTO writeCommentDTO) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 없습니다. id=" + commentId));
+        comment.update(writeCommentDTO);
+        commentRepository.save(comment);
     }
 
-    // 댓글 삭제
+    /* 댓글 삭제 */
     @Transactional
-    public void deleteComment(Long id) {
-        Comment comment = commentRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다: " + id));
+    public void deleteComment(Long commentId) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 없습니다. id=" + commentId));
         commentRepository.delete(comment);
     }
 }

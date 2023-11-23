@@ -23,7 +23,7 @@ public class BoardController {
     private final LikeService likeService;
 
     @GetMapping // 전체 조회
-    public String listBoards(Model model, @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+    public String listBoards(Model model, @PageableDefault(size = 9, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         model.addAttribute("boards", boardService.getAllBoards(pageable));
         return "board/list";
     }

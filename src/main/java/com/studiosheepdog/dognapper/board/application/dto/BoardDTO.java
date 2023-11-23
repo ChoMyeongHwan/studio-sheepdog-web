@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -20,12 +22,13 @@ public class BoardDTO {
     private int commentCount; // 댓글 수
     private int likeCount; // 좋아요 수
     private LocalDateTime createdDate; // 작성일
+    private LocalDateTime modifiedDate; // 수정일
 
-    /*
-    * Entity -> DTO
-    * 해당 메서드가 BoardDTO 인스턴스를 생성하고 초기화하는 역할을 함
-    * static 메서드는 인스턴스 생성 없이 클래스 이름으로 직접 호출할 수 있어서 편리하게 사용
-    * */
+    // CommentDTO 리스트 필드 추가
+    private List<CommentDTO> comments;
+    // LikeDTO 리스트 필드 추가
+    private List<LikeDTO> likes;
+
     public static BoardDTO from(Board board) {
         BoardDTO boardDTO = new BoardDTO();
         boardDTO.setId(board.getId());
@@ -33,9 +36,25 @@ public class BoardDTO {
         boardDTO.setContent(board.getContent());
         boardDTO.setCategory(board.getCategory());
         boardDTO.setWriter(board.getWriter());
-        boardDTO.setCommentCount(board.getCommentCount()); // 댓글 수
-        boardDTO.setLikeCount(board.getLikeCount()); // 좋아요 수
-        boardDTO.setCreatedDate(board.getCreatedDate()); // 작성일
+        boardDTO.setCommentCount(board.getCommentCount());
+        boardDTO.setLikeCount(board.getLikeCount());
+        boardDTO.setCreatedDate(board.getCreatedDate());
+        boardDTO.setModifiedDate(board.getModifiedDate());
+
+        // 댓글들도 CommentDTO로 변환하여 설정
+        if (board.getComments() != null) {
+            boardDTO.setComments(board.getComments().stream()
+                    .map(CommentDTO::from)
+                    .collect(Collectors.toList()));
+        }
+
+        // 좋아요들도 LikeDTO로 변환하여 설정
+        if (board.getLikes() != null) {
+            boardDTO.setLikes(board.getLikes().stream()
+                    .map(LikeDTO::from)
+                    .collect(Collectors.toList()));
+        }
+
         return boardDTO;
     }
 }

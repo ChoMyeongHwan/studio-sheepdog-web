@@ -31,6 +31,10 @@ public class BoardController {
     @GetMapping("/{id}") // 게시글 상세 조회
     public String viewBoard(@PathVariable Long id, Model model) {
         BoardDTO boardDTO = boardService.getBoard(id);
+
+        Long tempUserId = 1L;  // 임시 사용자 아이디
+        model.addAttribute("userId", tempUserId);
+
         model.addAttribute("board", boardDTO);
         model.addAttribute("comments", commentService.getComments(id));
         model.addAttribute("likes", likeService.getLikes(id));

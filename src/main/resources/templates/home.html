@@ -2,48 +2,35 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Studio Sheepdog</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
-<!--navbar-->
-<div th:insert="navbar::navbar"></div>
-<!-- Page content-->
-<div class="container mt-4">
-    <div class="text-center">
-        <h1>개도둑 커뮤니티입니다.</h1>
-        <p class="lead">귀여운 강아지와 함께 경영을 해볼까요?</p>
-    </div>
-    <div class="row">
-        <!-- 공지사항 영역 -->
-        <div class="col-md-6">
-            <h4>공지사항</h4>
-            <!-- 공지사항 내용이 들어갈 부분 -->
-        </div>
+<div th:replace="navbar :: navbar"></div>
+<div class="container my-3">
+    <h1 class="text-center">개도둑 커뮤니티에 오신 것을 환영합니다!</h1>
 
-        <!-- 자유게시판 영역 -->
-        <div class="col-md-6">
-            <h4>자유게시판</h4>
-            <!-- 자유게시판 내용이 들어갈 부분 -->
+    <div class="row my-3">
+        <div class="col">
+            <a href="/boards" class="btn btn-success btn-lg btn-block">게시판으로 이동</a>
+        </div>
+        <div class="col">
+            <a href="/" class="btn btn-success btn-lg btn-block">채팅방으로 이동</a>
         </div>
     </div>
-    <div class="row">
-        <!-- 스크린샷 영역 -->
-        <div class="col-md-6">
-            <h4>스크린샷</h4>
-            <!-- 스크린샷 내용이 들어갈 부분 -->
-        </div>
 
-        <!-- 채팅방 영역 -->
-        <div class="col-md-6">
-            <h4>채팅방</h4>
-            <!-- 채팅방 내용이 들어갈 부분 -->
+    <div class="row">
+        <div class="col">
+            <img th:src="@{/img/dog_farming.jpg}" class="img-fluid" alt="Dog Farming">
+        </div>
+        <div class="col">
+            <img th:src="@{/img/dog_quest.jpg}" class="img-fluid" alt="Dog Quest">
         </div>
     </div>
 </div>
-
-<!-- Bootstrap core JS-->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

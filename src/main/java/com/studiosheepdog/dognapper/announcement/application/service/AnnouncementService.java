@@ -1,4 +1,4 @@
-package com.studiosheepdog.dognapper.announcement.domain.service;
+package com.studiosheepdog.dognapper.announcement.application.service;
 
 import com.studiosheepdog.dognapper.announcement.application.dto.AnnouncementDTO;
 import com.studiosheepdog.dognapper.announcement.domain.aggregate.entity.Announcement;
@@ -12,46 +12,53 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.NoSuchElementException;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
-public class AnnouncementDomService {
+@Transactional
+public class AnnouncementService {
 
     private final AnnouncementRepository announcementRepository;
 
     // 공지사항 작성
-    public Announcement createAnnouncement(AnnouncementDTO announcementDTO) {
+    public AnnouncementDTO createAnnouncement(AnnouncementDTO announcementDTO) {
         Announcement announcement = Announcement.builder()
                 .title(announcementDTO.getTitle())
                 .content(announcementDTO.getContent())
                 .writer(announcementDTO.getWriter())
                 .build();
 
-        return announcementRepository.save(announcement);
+        announcementRepository.save(announcement);
+
+        return announcement.toDTO();
     }
 
-    // 공지사항 전체 조회 (페이지 단위)
+    // 전체 조회
     @Transactional(readOnly = true)
-    public Page<Announcement> getAnnouncements(Pageable pageable) {
-        return announcementRepository.findAll(pageable);
+    public Page<AnnouncementDTO> getAnnouncements(Pageable pageable) {
+        Page<Announcement> announcements = announcementRepository.findAll(pageable);;
+        return announcements.map(Announcement::toDTO);
     }
 
-    // 공지사항 상세 조회
+    // 상세 조회
     @Transactional(readOnly = true)
-    public Announcement getAnnouncement(Long id) {
-        return announcementRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("No Announcement found with id: " + id));
+    public AnnouncementDTO getAnnouncement(Long id) {
+        Announcement announcement = announcementRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("해당 아이디를 가진 공지사항이 없습니다: " + id));
+        return announcement.toDTO();
     }
 
     // 공지사항 수정
-    public Announcement updateAnnouncement(Long id, AnnouncementDTO announcementDTO) {
+    public AnnouncementDTO updateAnnouncement(Long id, AnnouncementDTO announcementDTO) {
         Announcement announcement = announcementRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("No Announcement found with id: " + id));
+                .orElseThrow(() -> new NoSuchElementException("해당 아이디를 가진 공지사항이 없습니다: " + id));
         announcement.update(announcementDTO.getTitle(), announcementDTO.getContent(), announcementDTO.getWriter());
-        return announcement;
+        return announcement.toDTO();
     }
 
     // 공지사항 삭제
     public void deleteAnnouncement(Long id) {
+        if (!announcementRepository.existsById(id)) {
+            throw new NoSuchElementException("해당 아이디를 가진 공지사항이 없습니다: " + id);
+        }
         announcementRepository.deleteById(id);
     }
 }
